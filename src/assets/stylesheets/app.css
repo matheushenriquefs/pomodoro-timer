@@ -1,0 +1,48 @@
+html,
+body,
+#app {
+  height: 100%;
+  width: 100%;
+}
+
+:root {
+  --limegreen-500: #22dd57;
+  --red-300: #ea868f;
+  --red-500: #dc3545;
+  --teal-500: #20c997;
+  --white: #ffffff;
+  --fw-light: 300;
+  --fw-regular: 400;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings: "slnt" 0;
+}
+
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+
+.btn-primary-rounded {
+  background-color: var(--white);
+  border-radius: 50%;
+  padding: 0.5rem;
+  height: 3rem;
+  width: 3rem;
+}
+
+.btn-primary-rounded * {
+  color: var(--red-500);
+}
