@@ -14,6 +14,16 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "jsdom",
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "html"],
+      exclude: [
+        "commitlint.config.js",
+        ".eslintrc.cjs",
+        "vite-env.d.ts",
+        "src/main.ts",
+      ],
+    },
     exclude: [...configDefaults.exclude, "e2e/*"],
   },
 });
