@@ -13,6 +13,9 @@ import dayjs from "dayjs";
 
 import { usePlayTurnSoundFn } from "../../composables/usePlayTurnSoundFn";
 import { useElementScrolledPercentage } from "../../composables/useElementScrolledPercentage";
+import { useComputeTimerDataFn } from "../../composables/useComputeTimerDataFn";
+import { timerConfig } from "../../config/timer";
+import { storageConfig } from "../../config/storage";
 import StemIcon from "../../assets/icons/stem.svg";
 import turnSfx from "../../assets/sounds/turn.mp3";
 import tickSfx from "../../assets/sounds/tick.mp3";
@@ -28,15 +31,6 @@ type Timer = {
   };
 };
 
-const quantityOfTimelineMarks = 5;
-const quantityOfMinutesBetweenMarks = 5;
-const oneMinuteInSeconds = 60;
-const timelineDecreaseRate = 0.5;
-const timerStorageDefault = {
-  hiddenAt: "",
-  chosenInterval: 0,
-  decreaseIntervalInMilliseconds: 0,
-};
 const timelineElement = ref<HTMLElement | null>(null);
 const timer = ref<Timer>({
   isTicking: false,
@@ -51,15 +45,19 @@ const { play: playTurnSfx } = useSound(turnSfx, { volume: 0.5 });
 const { play: playTickSfx } = useSound(tickSfx, { volume: 0.5 });
 const { play: playRingSfx } = useSound(ringSfx, { volume: 0.5 });
 const { x, isScrolling } = useScroll(timelineElement, { behavior: "smooth" });
-const timerStorage = useStorage("timer", timerStorageDefault, sessionStorage);
+const timerStorage = useStorage("timer", storageConfig, sessionStorage);
 const { percentage: timelineScrolledPercentage } = useElementScrolledPercentage(
   timelineElement,
   x,
 );
 const timeline = Array.from({
-  length: quantityOfTimelineMarks * quantityOfMinutesBetweenMarks + 1,
+  length:
+    timerConfig.quantityOfTimelineMarks *
+      timerConfig.quantityOfMinutesBetweenMarks +
+    1,
 }).map((_, index) => {
-  const isTimelineMark = index % quantityOfMinutesBetweenMarks === 0;
+  const isTimelineMark =
+    index % timerConfig.quantityOfMinutesBetweenMarks === 0;
 
   if (isTimelineMark) {
     return {
@@ -78,7 +76,7 @@ const resetTimer = () => {
   x.value = 0;
   clearInterval(timer.value.intervals.timeline);
   clearInterval(timer.value.intervals.counter);
-  timerStorage.value = timerStorageDefault;
+  timerStorage.value = storageConfig;
 };
 
 const handleTimelineInterval = (
@@ -99,39 +97,24 @@ const handleCounterInterval = (chosenTimelineInterval: number) =>
   setInterval(() => {
     timer.value.counter++;
 
-    if (timer.value.counter === chosenTimelineInterval * oneMinuteInSeconds) {
+    if (
+      timer.value.counter ===
+      chosenTimelineInterval * timerConfig.oneMinuteInSeconds
+    ) {
       resetTimer();
       playRingSfx();
     }
   }, 1000);
-
-const calculateTimelineData = () => {
-  const chosenInterval = Math.round(
-    (quantityOfTimelineMarks *
-      quantityOfMinutesBetweenMarks *
-      timelineScrolledPercentage.value) /
-      100,
-  );
-
-  const decreaseIntervalInMilliseconds = Math.round(
-    ((chosenInterval * oneMinuteInSeconds) / (x.value / timelineDecreaseRate)) *
-      1000,
-  );
-
-  return {
-    chosenInterval,
-    decreaseIntervalInMilliseconds,
-  };
-};
 
 const doTick = useDebounceFn(() => {
   if (timer.value.isTicking) {
     return;
   }
 
-  const timeline = calculateTimelineData();
+  const { chosenInterval, decreaseIntervalInMilliseconds } =
+    useComputeTimerDataFn(timelineScrolledPercentage, x);
 
-  if (!timeline.chosenInterval) {
+  if (!chosenInterval) {
     timer.value.counter = 0;
     clearInterval(timer.value.intervals.timeline);
     clearInterval(timer.value.intervals.counter);
@@ -139,17 +122,15 @@ const doTick = useDebounceFn(() => {
     return;
   }
 
-  timerStorage.value.chosenInterval = timeline.chosenInterval;
+  timerStorage.value.chosenInterval = chosenInterval;
   timerStorage.value.decreaseIntervalInMilliseconds =
-    timeline.decreaseIntervalInMilliseconds;
+    decreaseIntervalInMilliseconds;
   timer.value.isTicking = true;
   timer.value.intervals.timeline = handleTimelineInterval(
-    timelineDecreaseRate,
-    timeline.decreaseIntervalInMilliseconds,
+    timerConfig.timelineDecreaseRate,
+    decreaseIntervalInMilliseconds,
   );
-  timer.value.intervals.counter = handleCounterInterval(
-    timeline.chosenInterval,
-  );
+  timer.value.intervals.counter = handleCounterInterval(chosenInterval);
 }, 1000);
 
 const handleOnResetClick = () => {
@@ -177,14 +158,14 @@ useEventListener(document, "visibilitychange", () => {
     );
 
     timer.value.intervals.timeline = handleTimelineInterval(
-      timelineDecreaseRate,
+      timerConfig.timelineDecreaseRate,
       timerStorage.value.decreaseIntervalInMilliseconds,
     );
     timer.value.intervals.counter = handleCounterInterval(
       timerStorage.value.chosenInterval,
     );
 
-    timerStorage.value = timerStorageDefault;
+    timerStorage.value = storageConfig;
 
     return;
   }
