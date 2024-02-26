@@ -14,6 +14,7 @@ import dayjs from "dayjs";
 import { usePlayTurnSoundFn } from "../../composables/usePlayTurnSoundFn";
 import { useElementScrolledPercentage } from "../../composables/useElementScrolledPercentage";
 import { useComputeTimerDataFn } from "../../composables/useComputeTimerDataFn";
+import { useResetTimerFn } from "../../composables/useResetTimerFn";
 import { timerConfig } from "../../config/timer";
 import { storageConfig } from "../../config/storage";
 import { Timer } from "../../types";
@@ -61,15 +62,6 @@ const timeline = Array.from({
   };
 });
 
-const resetTimer = () => {
-  timer.value.isTicking = false;
-  timer.value.counter = 0;
-  x.value = 0;
-  clearInterval(timer.value.intervals.timeline);
-  clearInterval(timer.value.intervals.counter);
-  timerStorage.value = storageConfig;
-};
-
 const handleTimelineInterval = (
   decreaseRate: number,
   decreaseInterval: number,
@@ -78,7 +70,7 @@ const handleTimelineInterval = (
     x.value -= decreaseRate;
 
     if (!x.value) {
-      resetTimer();
+      useResetTimerFn(timer, timerStorage, x);
     }
 
     playTickSfx();
@@ -92,7 +84,7 @@ const handleCounterInterval = (chosenTimelineInterval: number) =>
       timer.value.counter ===
       chosenTimelineInterval * timerConfig.oneMinuteInSeconds
     ) {
-      resetTimer();
+      useResetTimerFn(timer, timerStorage, x);
       playRingSfx();
     }
   }, 1000);
@@ -125,7 +117,7 @@ const doTick = useDebounceFn(() => {
 }, 1000);
 
 const handleOnResetClick = () => {
-  resetTimer();
+  useResetTimerFn(timer, timerStorage, x);
 };
 
 useEventListener(document, "visibilitychange", () => {
@@ -418,3 +410,4 @@ watch(x, () => {
   }
 }
 </style>
+../../composables/useResetTimerFn
