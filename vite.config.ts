@@ -20,7 +20,7 @@ export default defineConfig({
       exclude: [
         "commitlint.config.js",
         ".eslintrc.cjs",
-        "vite-env.d.ts",
+        "src/vite-env.d.ts",
         "src/main.ts",
       ],
     },
