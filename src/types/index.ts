@@ -13,3 +13,11 @@ export type TimerStorage = {
   chosenInterval: number;
   decreaseIntervalInMilliseconds: number;
 };
+
+interface PlayOptions {
+  id?: number;
+  forceSoundEnabled?: boolean;
+  playbackRate?: number;
+}
+
+export type PlayFunction = (options?: PlayOptions) => void;

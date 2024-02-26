@@ -1,12 +1,7 @@
 import { toValue, type MaybeRefOrGetter } from "vue";
 import { useThrottleFn } from "@vueuse/core";
 
-interface PlayOptions {
-  id?: number;
-  forceSoundEnabled?: boolean;
-  playbackRate?: number;
-}
-type PlayFunction = (options?: PlayOptions) => void;
+import { type PlayFunction } from "../../types";
 
 export const delay = 125;
 
