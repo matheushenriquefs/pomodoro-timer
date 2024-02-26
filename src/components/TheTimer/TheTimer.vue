@@ -15,6 +15,7 @@ import { usePlayTurnSoundFn } from "../../composables/usePlayTurnSoundFn";
 import { useElementScrolledPercentage } from "../../composables/useElementScrolledPercentage";
 import { useComputeTimerDataFn } from "../../composables/useComputeTimerDataFn";
 import { useResetTimerFn } from "../../composables/useResetTimerFn";
+import { useHandleTimerTimelineFn } from "../../composables/useHandleTimerTimelineFn";
 import { timerConfig } from "../../config/timer";
 import { storageConfig } from "../../config/storage";
 import { Timer } from "../../types";
@@ -62,20 +63,6 @@ const timeline = Array.from({
   };
 });
 
-const handleTimelineInterval = (
-  decreaseRate: number,
-  decreaseInterval: number,
-) =>
-  setInterval(() => {
-    x.value -= decreaseRate;
-
-    if (!x.value) {
-      useResetTimerFn(timer, timerStorage, x);
-    }
-
-    playTickSfx();
-  }, decreaseInterval);
-
 const handleCounterInterval = (chosenTimelineInterval: number) =>
   setInterval(() => {
     timer.value.counter++;
@@ -109,9 +96,17 @@ const doTick = useDebounceFn(() => {
   timerStorage.value.decreaseIntervalInMilliseconds =
     decreaseIntervalInMilliseconds;
   timer.value.isTicking = true;
-  timer.value.intervals.timeline = handleTimelineInterval(
-    timerConfig.timelineDecreaseRate,
-    decreaseIntervalInMilliseconds,
+  timer.value.intervals.timeline = useHandleTimerTimelineFn(
+    timer,
+    timerStorage,
+    x,
+    {
+      decrease: {
+        rate: timerConfig.timelineDecreaseRate,
+        interval: decreaseIntervalInMilliseconds,
+      },
+      playFn: playTickSfx,
+    },
   );
   timer.value.intervals.counter = handleCounterInterval(chosenInterval);
 }, 1000);
@@ -140,9 +135,17 @@ useEventListener(document, "visibilitychange", () => {
         (timerStorage.value.decreaseIntervalInMilliseconds / 1000),
     );
 
-    timer.value.intervals.timeline = handleTimelineInterval(
-      timerConfig.timelineDecreaseRate,
-      timerStorage.value.decreaseIntervalInMilliseconds,
+    timer.value.intervals.timeline = useHandleTimerTimelineFn(
+      timer,
+      timerStorage,
+      x,
+      {
+        decrease: {
+          rate: timerConfig.timelineDecreaseRate,
+          interval: timerStorage.value.decreaseIntervalInMilliseconds,
+        },
+        playFn: playTickSfx,
+      },
     );
     timer.value.intervals.counter = handleCounterInterval(
       timerStorage.value.chosenInterval,
