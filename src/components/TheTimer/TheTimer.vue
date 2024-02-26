@@ -16,6 +16,7 @@ import { useElementScrolledPercentage } from "../../composables/useElementScroll
 import { useComputeTimerDataFn } from "../../composables/useComputeTimerDataFn";
 import { useResetTimerFn } from "../../composables/useResetTimerFn";
 import { useHandleTimerTimelineFn } from "../../composables/useHandleTimerTimelineFn";
+import { useHandleTimerCounterFn } from "../../composables/useHandleTimerCounterFn";
 import { timerConfig } from "../../config/timer";
 import { storageConfig } from "../../config/storage";
 import { Timer } from "../../types";
@@ -63,19 +64,6 @@ const timeline = Array.from({
   };
 });
 
-const handleCounterInterval = (chosenTimelineInterval: number) =>
-  setInterval(() => {
-    timer.value.counter++;
-
-    if (
-      timer.value.counter ===
-      chosenTimelineInterval * timerConfig.oneMinuteInSeconds
-    ) {
-      useResetTimerFn(timer, timerStorage, x);
-      playRingSfx();
-    }
-  }, 1000);
-
 const doTick = useDebounceFn(() => {
   if (timer.value.isTicking) {
     return;
@@ -108,7 +96,15 @@ const doTick = useDebounceFn(() => {
       playFn: playTickSfx,
     },
   );
-  timer.value.intervals.counter = handleCounterInterval(chosenInterval);
+  timer.value.intervals.counter = useHandleTimerCounterFn(
+    timer,
+    timerStorage,
+    x,
+    {
+      interval: chosenInterval,
+      playFn: playRingSfx,
+    },
+  );
 }, 1000);
 
 const handleOnResetClick = () => {
@@ -147,8 +143,14 @@ useEventListener(document, "visibilitychange", () => {
         playFn: playTickSfx,
       },
     );
-    timer.value.intervals.counter = handleCounterInterval(
-      timerStorage.value.chosenInterval,
+    timer.value.intervals.counter = useHandleTimerCounterFn(
+      timer,
+      timerStorage,
+      x,
+      {
+        interval: timerStorage.value.chosenInterval,
+        playFn: playRingSfx,
+      },
     );
 
     timerStorage.value = storageConfig;
