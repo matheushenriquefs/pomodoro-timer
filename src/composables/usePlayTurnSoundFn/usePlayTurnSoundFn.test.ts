@@ -11,7 +11,6 @@ describe("usePlayTurnSoundFn", () => {
   });
 
   it("should play turn sfx when timer is not ticking", async () => {
-    vi.spyOn(console, "warn").mockImplementation(() => undefined);
     let res = await usePlayTurnSoundFn(false);
 
     expect(res).toBe(true);
@@ -31,6 +30,7 @@ describe("usePlayTurnSoundFn", () => {
     await promiseTimeout(delay);
 
     const callback = vi.fn();
+
     res = await usePlayTurnSoundFn(false, callback);
 
     expect(callback).toHaveBeenCalledOnce();
@@ -39,7 +39,6 @@ describe("usePlayTurnSoundFn", () => {
   });
 
   it("should not play turn sfx when timer is ticking", async () => {
-    vi.spyOn(console, "warn").mockImplementation(() => undefined);
     let res = await usePlayTurnSoundFn(true);
 
     expect(res).toBe(false);
