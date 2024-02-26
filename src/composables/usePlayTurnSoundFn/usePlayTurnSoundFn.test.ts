@@ -29,6 +29,13 @@ describe("usePlayTurnSoundFn", () => {
     expect(res).toBe(true);
 
     await promiseTimeout(delay);
+
+    const callback = vi.fn();
+    res = await usePlayTurnSoundFn(false, callback);
+
+    expect(callback).toHaveBeenCalledOnce();
+
+    await promiseTimeout(delay);
   });
 
   it("should not play turn sfx when timer is ticking", async () => {
