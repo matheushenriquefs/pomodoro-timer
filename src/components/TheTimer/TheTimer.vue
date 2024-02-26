@@ -18,6 +18,16 @@ import turnSfx from "../../assets/sounds/turn.mp3";
 import tickSfx from "../../assets/sounds/tick.mp3";
 import ringSfx from "../../assets/sounds/ring.mp3";
 
+type Timer = {
+  isTicking: boolean;
+  hasInteracted: boolean;
+  counter: number;
+  intervals: {
+    timeline: number | NodeJS.Timeout;
+    counter: number | NodeJS.Timeout;
+  };
+};
+
 const quantityOfTimelineMarks = 5;
 const quantityOfMinutesBetweenMarks = 5;
 const oneMinuteInSeconds = 60;
@@ -28,7 +38,7 @@ const timerStorageDefault = {
   decreaseIntervalInMilliseconds: 0,
 };
 const timelineElement = ref<HTMLElement | null>(null);
-const timer = ref({
+const timer = ref<Timer>({
   isTicking: false,
   hasInteracted: false,
   counter: 0,
