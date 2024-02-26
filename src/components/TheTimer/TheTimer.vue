@@ -16,20 +16,11 @@ import { useElementScrolledPercentage } from "../../composables/useElementScroll
 import { useComputeTimerDataFn } from "../../composables/useComputeTimerDataFn";
 import { timerConfig } from "../../config/timer";
 import { storageConfig } from "../../config/storage";
+import { Timer } from "../../types";
 import StemIcon from "../../assets/icons/stem.svg";
 import turnSfx from "../../assets/sounds/turn.mp3";
 import tickSfx from "../../assets/sounds/tick.mp3";
 import ringSfx from "../../assets/sounds/ring.mp3";
-
-type Timer = {
-  isTicking: boolean;
-  hasInteracted: boolean;
-  counter: number;
-  intervals: {
-    timeline: number | NodeJS.Timeout;
-    counter: number | NodeJS.Timeout;
-  };
-};
 
 const timelineElement = ref<HTMLElement | null>(null);
 const timer = ref<Timer>({
