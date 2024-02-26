@@ -3,7 +3,6 @@ import { ref, computed, watch } from "vue";
 import {
   useScroll,
   useDebounceFn,
-  useThrottleFn,
   useEventListener,
   useStorage,
 } from "@vueuse/core";
@@ -12,6 +11,7 @@ import { Play as PlayIcon } from "lucide-vue-next";
 import { RotateCcw as RotateCcwIcon } from "lucide-vue-next";
 import dayjs from "dayjs";
 
+import { usePlayTurnSoundFn } from "../../composables/usePlayTurnSoundFn";
 import StemIcon from "../../assets/icons/stem.svg";
 import turnSfx from "../../assets/sounds/turn.mp3";
 import tickSfx from "../../assets/sounds/tick.mp3";
@@ -67,14 +67,6 @@ const timeline = Array.from({
     label: "",
   };
 });
-
-const playTurnSound = useThrottleFn(() => {
-  if (timer.value.isTicking) {
-    return;
-  }
-
-  playTurnSfx();
-}, 125);
 
 const resetTimer = () => {
   timer.value.isTicking = false;
@@ -198,7 +190,7 @@ useEventListener(document, "visibilitychange", () => {
 
 watch(x, () => {
   doTick();
-  playTurnSound();
+  usePlayTurnSoundFn(timer.value.isTicking, playTurnSfx);
 });
 </script>
 
