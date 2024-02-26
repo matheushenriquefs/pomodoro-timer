@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
+import { ref, watch } from "vue";
 import {
   useScroll,
   useDebounceFn,
@@ -12,6 +12,7 @@ import { RotateCcw as RotateCcwIcon } from "lucide-vue-next";
 import dayjs from "dayjs";
 
 import { usePlayTurnSoundFn } from "../../composables/usePlayTurnSoundFn";
+import { useElementScrolledPercentage } from "../../composables/useElementScrolledPercentage";
 import StemIcon from "../../assets/icons/stem.svg";
 import turnSfx from "../../assets/sounds/turn.mp3";
 import tickSfx from "../../assets/sounds/tick.mp3";
@@ -41,17 +42,10 @@ const { play: playTickSfx } = useSound(tickSfx, { volume: 0.5 });
 const { play: playRingSfx } = useSound(ringSfx, { volume: 0.5 });
 const { x, isScrolling } = useScroll(timelineElement, { behavior: "smooth" });
 const timerStorage = useStorage("timer", timerStorageDefault, sessionStorage);
-const timelineScrolledPercentage = computed(() => {
-  if (!timelineElement.value) {
-    return 0;
-  }
-
-  return Math.round(
-    (x.value /
-      (timelineElement.value.scrollWidth - timelineElement.value.offsetWidth)) *
-      100,
-  );
-});
+const { percentage: timelineScrolledPercentage } = useElementScrolledPercentage(
+  timelineElement,
+  x,
+);
 const timeline = Array.from({
   length: quantityOfTimelineMarks * quantityOfMinutesBetweenMarks + 1,
 }).map((_, index) => {
