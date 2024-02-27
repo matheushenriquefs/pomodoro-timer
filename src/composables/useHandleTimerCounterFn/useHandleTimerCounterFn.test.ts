@@ -1,13 +1,20 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, afterEach, beforeEach } from "vitest";
 import { ref } from "vue";
 import { useStorage } from "@vueuse/core";
-import { promiseTimeout } from "@vueuse/shared";
 
 import { useHandleTimerCounterFn } from "./useHandleTimerCounterFn";
 import { storageConfig } from "../../config/storage";
 import { type Timer } from "../../types";
 
 describe("useHandleTimerCounterFn", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it("should be defined", () => {
     expect(useHandleTimerCounterFn).toBeDefined();
   });
@@ -33,7 +40,6 @@ describe("useHandleTimerCounterFn", () => {
         counter: 0,
       },
     };
-    const delay = 80;
     const playFn = vi.fn(() => undefined);
     const expectedTimerStorage = storageConfig;
 
@@ -48,7 +54,7 @@ describe("useHandleTimerCounterFn", () => {
       },
     );
 
-    await promiseTimeout(delay);
+    vi.advanceTimersByTime(60);
 
     expect(timer.value).toMatchObject(expectedTimer);
     expect(timerStorage.value).toMatchObject(expectedTimerStorage);
