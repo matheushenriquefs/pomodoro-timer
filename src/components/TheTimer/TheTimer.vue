@@ -9,7 +9,6 @@ import {
 import { useSound } from "@raffaelesgarro/vue-use-sound";
 import { Play as PlayIcon } from "lucide-vue-next";
 import { RotateCcw as RotateCcwIcon } from "lucide-vue-next";
-import dayjs from "dayjs";
 
 import { usePlayTurnSoundFn } from "../../composables/usePlayTurnSoundFn";
 import { useElementScrolledPercentage } from "../../composables/useElementScrolledPercentage";
@@ -17,6 +16,7 @@ import { useComputeTimerDataFn } from "../../composables/useComputeTimerDataFn";
 import { useResetTimerFn } from "../../composables/useResetTimerFn";
 import { useHandleTimerTimelineFn } from "../../composables/useHandleTimerTimelineFn";
 import { useHandleTimerCounterFn } from "../../composables/useHandleTimerCounterFn";
+import { useHandleTimerVisibilityFn } from "../../composables/useHandleTimerVisibilityFn";
 import { timerConfig } from "../../config/timer";
 import { storageConfig } from "../../config/storage";
 import { Timer } from "../../types";
@@ -112,53 +112,10 @@ const handleOnResetClick = () => {
 };
 
 useEventListener(document, "visibilitychange", () => {
-  if (document.visibilityState === "visible") {
-    const now = dayjs(new Date(Date.now()).toJSON());
-    const differenceInSeconds = now.diff(timerStorage.value.hiddenAt, "second");
-
-    if (
-      !differenceInSeconds ||
-      !timerStorage.value.decreaseIntervalInMilliseconds
-    ) {
-      return;
-    }
-
-    clearInterval(timer.value.intervals.timeline);
-    clearInterval(timer.value.intervals.counter);
-    timer.value.counter += differenceInSeconds;
-    x.value -= Math.round(
-      differenceInSeconds /
-        (timerStorage.value.decreaseIntervalInMilliseconds / 1000),
-    );
-
-    timer.value.intervals.timeline = useHandleTimerTimelineFn(
-      timer,
-      timerStorage,
-      x,
-      {
-        decrease: {
-          rate: timerConfig.timelineDecreaseRate,
-          interval: timerStorage.value.decreaseIntervalInMilliseconds,
-        },
-        playFn: playTickSfx,
-      },
-    );
-    timer.value.intervals.counter = useHandleTimerCounterFn(
-      timer,
-      timerStorage,
-      x,
-      {
-        interval: timerStorage.value.chosenInterval,
-        playFn: playRingSfx,
-      },
-    );
-
-    timerStorage.value = storageConfig;
-
-    return;
-  }
-
-  timerStorage.value.hiddenAt = new Date(Date.now()).toJSON();
+  useHandleTimerVisibilityFn(timer, timerStorage, x, {
+    playRingFn: playRingSfx,
+    playTickFn: playTickSfx,
+  });
 });
 
 watch(x, () => {
@@ -415,4 +372,3 @@ watch(x, () => {
   }
 }
 </style>
-../../composables/useResetTimerFn
