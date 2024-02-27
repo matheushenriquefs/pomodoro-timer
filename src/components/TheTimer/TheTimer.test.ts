@@ -21,9 +21,7 @@ describe("TheTimer", () => {
     const button = wrapper.getByRole("button", {
       description: /start/i,
     });
-
     await user.click(button);
-
     const pomodoroText = wrapper.getByText(/pomodoro/i);
     const lastTimelineLabel = wrapper.getByTestId("timeline-label-25");
 

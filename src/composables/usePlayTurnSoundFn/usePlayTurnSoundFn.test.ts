@@ -29,11 +29,11 @@ describe("usePlayTurnSoundFn", () => {
 
     await promiseTimeout(delay);
 
-    const callback = vi.fn();
+    const playFn = vi.fn();
 
-    res = await usePlayTurnSoundFn(false, callback);
+    res = await usePlayTurnSoundFn(false, playFn);
 
-    expect(callback).toHaveBeenCalledOnce();
+    expect(playFn).toHaveBeenCalledOnce();
 
     await promiseTimeout(delay);
   });
