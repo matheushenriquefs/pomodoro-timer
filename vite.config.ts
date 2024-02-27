@@ -22,6 +22,7 @@ export default defineConfig({
         ".eslintrc.cjs",
         "src/vite-env.d.ts",
         "src/main.ts",
+        "src/types/index.ts",
       ],
     },
     exclude: [...configDefaults.exclude, "e2e/*"],
