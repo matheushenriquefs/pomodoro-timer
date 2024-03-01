@@ -10,8 +10,8 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.cts,.mts --ignore-path .gitignore",
     "format": "prettier -w src/",
     "lint-format": "npm run lint -- --fix && npm run format",
-    "test:unit": "vitest",
-    "test:coverage": "vitest run --coverage",
+    "test-unit": "vitest",
+    "test-coverage": "vitest run --coverage",
     "prepare": "husky"
   },
   "dependencies": {
