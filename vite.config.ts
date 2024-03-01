@@ -11,6 +11,14 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ["vue-demi"],
   },
+  server: {
+    host: true,
+    port: 3000,
+  },
+  preview: {
+    host: true,
+    port: 3333,
+  },
   test: {
     globals: true,
     environment: "jsdom",
