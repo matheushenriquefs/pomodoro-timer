@@ -2,6 +2,12 @@ FROM node:20.11.1-alpine3.19
 
 WORKDIR /app
 
+RUN apk update
+
+RUN apk upgrade
+
+RUN apk add git --no-cache
+
 COPY package*.json .
 
 RUN npm install
