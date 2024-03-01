@@ -1,18 +1,67 @@
-# Vue 3 + TypeScript + Vite
+# Pomodoro Timer
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+A simple Pomodoro web application built with Vue.js, Typescript and Docker. In addition to the chosen tech stack, the project adheres to essential coding best practices to improve its maintainability, readability, and scalability. Throughout the project the following principles were taken into account: clean code, Don't Repeat Yourself (DRY), Keep It Simple, Stupid (KISS), You Aren't Gonna Need It (YAGNI), Separation Of Concerns (SOC), and good documentation.
 
-## Recommended IDE Setup
+## Techs
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+- [Vue.js](https://vuejs.org)
+- [Typescript](https://www.typescriptlang.org)
+- [Vite](https://vitejs.dev)
+- [Vitest](https://vitest.dev)
+- [Vue Testing Library](https://testing-library.com/docs/vue-testing-library/intro)
+- [ESLint](https://eslint.org)
+- [Commitlint](https://commitlint.js.org)
+- [Docker](https://www.docker.com)
 
-## Type Support For `.vue` Imports in TS
+### Prerequisites
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+Make sure you have the following dependencies installed on your system:
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+```sh
+Docker >= 23.0.5
+Docker Compose >= 2.17.3
+```
 
-1. Disable the built-in TypeScript Extension
-   1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-   2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+## Project Setup
+
+1. Clone this repository.
+2. Copy the `.env.example` file to `.env.`
+
+```sh
+cp .env.example .env
+```
+
+## Running The Application
+
+Start the development server using Docker Compose.
+
+```sh
+docker compose up
+```
+
+The application will be running in development mode by default. Open your [browser](http://localhost:3000) to see it.
+
+### Run Unit Tests
+
+If the container is already running execute unit tests by running the following:
+
+```sh
+docker exec -it pomodoro-timer npm run test:unit
+```
+
+### Type-Check, Compile and Minify for Production
+
+To prepare the project for production, run:
+
+```sh
+docker exec -it pomodoro-timer npm run build
+```
+
+### Preview For Production
+
+1. Change the `NODE_ENV` value in `.env`.
+2. Run the application to preview the production build locally. Open your [browser](http://localhost:3333) to see it.
+
+```sh
+docker exec -it pomodoro-timer npm run preview
+```
