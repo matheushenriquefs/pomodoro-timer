@@ -21,7 +21,7 @@ jobs:
           cache: "npm"
       - run: npm install
       - name: Run code linting
-        run: npm run lintformat
+        run: npm run lint-format
   unit-test:
     runs-on: ubuntu-22.04
     needs: [lint]
