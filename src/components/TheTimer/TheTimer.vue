@@ -187,6 +187,7 @@ watch(x, () => {
 .start-button-icon {
   display: block;
   margin: 0 auto;
+  margin-left: calc(25% + 0.125rem);
 }
 
 .reset-button {
