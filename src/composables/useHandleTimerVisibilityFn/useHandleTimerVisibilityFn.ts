@@ -12,6 +12,16 @@ export const helpers = {
   isDocumentVisible: () => document.visibilityState === "visible",
 };
 
+/**
+ * Handles timer behavior based on document visibility.
+ * @param timer - A reference to the timer object.
+ * @param timerStorage - A reference to the timer storage.
+ * @param scroll - A reference to the scroll value.
+ * @param options - An object containing additional options.
+ * @param options.playTickFn - Optional. A function to be executed when a tick occurs.
+ * @param options.playRingFn - Optional. A function to be executed when the timer rings.
+ * @returns A boolean indicating whether the timer behavior was successfully handled.
+ */
 export const useHandleTimerVisibilityFn = (
   timer: Ref<Timer>,
   timerStorage: RemovableRef<TimerStorage>,
