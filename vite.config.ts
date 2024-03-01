@@ -11,6 +11,7 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ["vue-demi"],
   },
+  base: "/pomodoro-timer",
   server: {
     host: true,
     port: 3000,
