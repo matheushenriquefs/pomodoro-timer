@@ -39,14 +39,14 @@ Start the development server using Docker Compose.
 docker compose up
 ```
 
-The application will be running in development mode by default. Open your [browser](http://localhost:3000) to see it.
+The application will be running in development mode by default. Open your [browser](http://localhost:3000/pomodoro-timer) to see it.
 
 ### Run Unit Tests
 
 If the container is already running execute unit tests by running the following:
 
 ```sh
-docker exec -it pomodoro-timer npm run test:unit
+docker exec -it pomodoro-timer npm run test-unit
 ```
 
 ### Type-Check, Compile and Minify for Production
@@ -60,7 +60,7 @@ docker exec -it pomodoro-timer npm run build
 ### Preview For Production
 
 1. Change the `NODE_ENV` value in `.env`.
-2. Run the application to preview the production build locally. Open your [browser](http://localhost:3333) to see it.
+2. Run the application to preview the production build locally. Open your [browser](http://localhost:3333/pomodoro-timer) to see it.
 
 ```sh
 docker exec -it pomodoro-timer npm run preview
