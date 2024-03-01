@@ -1,0 +1,20 @@
+version: "3.8"
+services:
+  pomodoro-timer:
+    platform: linux/amd64
+    build: .
+    image: pomodoro-timer
+    container_name: pomodoro-timer
+    working_dir: /app
+    ports:
+      - 3000:3000
+      - 3333:3333
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    command: sh ./entrypoint.sh
+
+networks:
+  default:
+    driver: bridge
