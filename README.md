@@ -2,6 +2,10 @@
 
 A simple Pomodoro web application built with Vue.js, Typescript and Docker. In addition to the chosen tech stack, the project adheres to essential coding best practices to improve its maintainability, readability, and scalability. Throughout the project the following principles were taken into account: clean code, Don't Repeat Yourself (DRY), Keep It Simple, Stupid (KISS), You Aren't Gonna Need It (YAGNI), Separation Of Concerns (SOC), and good documentation.
 
+## Demo
+
+![Pomodoro Timer app demo](static/demo.gif)
+
 ## Techs
 
 - [Vue.js](https://vuejs.org)
